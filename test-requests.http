@@ -1,0 +1,119 @@
+### 1. Test: Send Business Partner from S/4HANA (Create New)
+POST http://localhost:4004/odata/v4/business-partner/receiveBusinessPartner
+Content-Type: application/json
+
+{
+  "ID": "BP001",
+  "FirstName": "Fathima",
+  "LastName": "Khanam",
+  "Email": "fathima.khanam@example.com",
+  "Phone": "+91-9876543210",
+  "Country": "IND",
+  "PartnerType": "Customer"
+}
+
+### 2. Test: Send Another Business Partner
+POST http://localhost:4004/odata/v4/business-partner/receiveBusinessPartner
+Content-Type: application/json
+
+{
+  "ID": "BP002",
+  "FirstName": "Sarah",
+  "LastName": "Johnson",
+  "Email": "sarah.j@example.com",
+  "Phone": "+1-555-0123",
+  "Country": "USA",
+  "PartnerType": "Supplier"
+}
+
+### 3. Test: Send Indian Supplier
+POST http://localhost:4004/odata/v4/business-partner/receiveBusinessPartner
+Content-Type: application/json
+
+{
+  "ID": "BP003",
+  "FirstName": "Priya",
+  "LastName": "Sharma",
+  "Email": "priya.sharma@example.com",
+  "Phone": "+91-9988776655",
+  "Country": "IND",
+  "PartnerType": "Supplier"
+}
+
+### 4. Test: Update Existing Business Partner (send BP001 again with changes)
+POST http://localhost:4004/odata/v4/business-partner/receiveBusinessPartner
+Content-Type: application/json
+
+{
+  "ID": "BP001",
+  "FirstName": "Fathima",
+  "LastName": "Khanam - Updated",
+  "Email": "fathima.khanam0014@example.com - Updated",
+  "Phone": "+91-9876543210",
+  "Country": "IND",
+  "PartnerType": "Customer"
+}
+
+###############################################
+# READ OPERATIONS - Query the Data
+###############################################
+
+### 5. Get All Business Partners
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners
+
+### 6. Get Specific Business Partner by ID
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners('BP001')
+
+### 7. Filter: Get Only Customers
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners?$filter=PartnerType eq 'Customer'
+
+### 8. Filter: Get Only Business Partners from India
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners?$filter=Country eq 'IND'
+
+### 9. Filter: Get Indian Customers Only
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners?$filter=Country eq 'IND' and PartnerType eq 'Customer'
+
+### 10. Sort: Order by Last Name
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners?$orderby=LastName
+
+### 11. Sort: Order by Country, then LastName
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners?$orderby=Country,LastName
+
+### 12. Select: Get Only Specific Fields
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners?$select=ID,FirstName,LastName,Country
+
+### 13. Top: Get Only First 2 Records
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners?$top=2
+
+### 14. Count: How Many Business Partners?
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners/$count
+
+### 15. Complex Query: Indian Customers, sorted by name, only ID and Name
+GET http://localhost:4004/odata/v4/business-partner/BusinessPartners?$filter=Country eq 'IND' and PartnerType eq 'Customer'&$orderby=LastName&$select=ID,FirstName,LastName
+
+###############################################
+# ERROR TESTING
+###############################################
+
+### 16. Test: Missing Required Field (should fail gracefully)
+POST http://localhost:4004/odata/v4/business-partner/receiveBusinessPartner
+Content-Type: application/json
+
+{
+  "ID": "BP999",
+  "FirstName": "Test"
+}
+
+### 17. Test: Empty ID (should handle error)
+POST http://localhost:4004/odata/v4/business-partner/receiveBusinessPartner
+Content-Type: application/json
+
+{
+"ID": "",
+"FirstName": "Test",
+"LastName": "User",
+"Email": "test@example.com",
+"Phone": "+1-555-0000",
+"Country": "USA",
+"PartnerType": "Customer"
+}
